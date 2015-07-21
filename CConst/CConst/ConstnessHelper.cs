@@ -79,7 +79,7 @@ namespace FonsDijkstra.CConst
         public static bool IsConstAttribute(this AttributeSyntax attribute, SemanticModel model)
         {
             var symbol = model.GetSymbolInfo(attribute).Symbol;
-            return symbol?.ContainingAssembly?.Name == "CConst" &&
+            return symbol?.ContainingAssembly?.Name == "FonsDijkstra.CConst" &&
                 symbol?.ContainingType?.Name == "ConstAttribute";
         }
 
