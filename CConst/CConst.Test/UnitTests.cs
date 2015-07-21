@@ -41,7 +41,7 @@ namespace CConst.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = CConstAnalyzer.DiagnosticId,
+                Id = ConstActionAnalyzer.DiagnosticId,
                 Message = String.Format("Type name '{0}' contains lowercase letters", "TypeName"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
@@ -71,12 +71,12 @@ namespace CConst.Test
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new CConstCodeFixProvider();
+            return new ConstActionCodeFixProvider();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new CConstAnalyzer();
+            return new ConstActionAnalyzer();
         }
     }
 }

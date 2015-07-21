@@ -32,8 +32,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CodeFixProvider.cs" />
-    <Compile Include="DiagnosticAnalyzer.cs" />
+    <Compile Include="AssignmentInConstMethodAnalyzer.cs" />
+    <Compile Include="AssignmentInConstMethodCodeFixProvider.cs" />
+    <Compile Include="ConstActionAnalyzer.cs" />
+    <Compile Include="ConstActionCodeFixProvider.cs" />
+    <Compile Include="ConstAttribute.cs" />
+    <Compile Include="ConstnessHelper.cs" />
+    <Compile Include="InvocationInConstMethodAnalyzer.cs" />
+    <Compile Include="InvocationInConstMethodCodeFixProvider.cs" />
+    <Compile Include="NonConstFuncAnalyzer.cs" />
+    <Compile Include="NonConstFuncCodeFixProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
