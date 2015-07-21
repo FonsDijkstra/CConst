@@ -1,2 +1,2 @@
 # CConst
-Constness code analyzers voor de new C# Roslyn compiler
+Constness code analyzers for the new C# Roslyn compiler
