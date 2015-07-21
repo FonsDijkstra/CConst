@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using TestHelper;
-using CConst;
+using FonsDijkstra.CConst;
 
-namespace CConst.Test
+namespace FonsDijkstra.CConst.Test
 {
     [TestClass]
     public class UnitTest : CodeFixVerifier

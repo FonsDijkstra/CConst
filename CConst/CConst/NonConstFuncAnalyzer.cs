@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
-namespace CConst
+namespace FonsDijkstra.CConst
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class NonConstFuncAnalyzer : DiagnosticAnalyzer

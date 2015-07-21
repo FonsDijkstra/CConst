@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="CConst.Vsix..caffca8b-c1b9-4af5-8706-a7818209264d" Version="1.0" Language="en-US" Publisher="fons"/>
-    <DisplayName>CConst.Vsix</DisplayName>
+    <Identity Id="FonsDijkstra.CConst.Vsix..caffca8b-c1b9-4af5-8706-a7818209264d" Version="1.0" Language="en-US" Publisher="fons"/>
+    <DisplayName>FonsDijkstra.CConst.Vsix</DisplayName>
     <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
   </Metadata>
   <Installation>

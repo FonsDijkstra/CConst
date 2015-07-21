@@ -7,7 +7,7 @@ using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CConst
+namespace FonsDijkstra.CConst
 {
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(InvocationInConstMethodCodeFixProvider)), Shared]
     public class InvocationInConstMethodCodeFixProvider : CodeFixProvider

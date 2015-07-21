@@ -8,8 +8,8 @@
     <ProjectGuid>{8DFE627F-4251-4DC5-AD63-F3AD9282E37B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CConst.Test</RootNamespace>
-    <AssemblyName>CConst.Test</AssemblyName>
+    <RootNamespace>FonsDijkstra.CConst.Test</RootNamespace>
+    <AssemblyName>FonsDijkstra.CConst.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

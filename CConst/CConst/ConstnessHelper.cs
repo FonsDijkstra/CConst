@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CConst
+namespace FonsDijkstra.CConst
 {
     static class ConstnessHelper
     {
