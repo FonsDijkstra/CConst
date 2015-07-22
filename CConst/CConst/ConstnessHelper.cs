@@ -79,8 +79,8 @@ namespace FonsDijkstra.CConst
         public static bool IsConstAttribute(this AttributeSyntax attribute, SemanticModel model)
         {
             var symbol = model.GetSymbolInfo(attribute).Symbol;
-            return symbol?.ContainingAssembly?.Name == "FonsDijkstra.CConst" &&
-                symbol?.ContainingType?.Name == "ConstAttribute";
+            return symbol?.ContainingAssembly?.Name == typeof(ConstAttribute).Namespace &&
+                symbol?.ContainingType?.Name == typeof(ConstAttribute).Name;
         }
 
         public static async Task<Document> RemoveConstAttributeAsync(this MethodDeclarationSyntax method, Document document, CancellationToken cancellationToken)
