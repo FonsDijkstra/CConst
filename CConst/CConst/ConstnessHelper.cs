@@ -40,9 +40,10 @@ namespace FonsDijkstra.CConst
                 return null;
             }
 
+            var invokedModel = model.Compilation.GetSemanticModel(syntax);
             return syntax.GetRoot().DescendantNodesAndSelf()
                 .OfType<MethodDeclarationSyntax>()
-                .Where(md => model.GetDeclaredSymbol(md) == symbol)
+                .Where(md => invokedModel.GetDeclaredSymbol(md) == symbol)
                 .SingleOrDefault();
         }
 
