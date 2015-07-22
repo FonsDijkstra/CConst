@@ -108,7 +108,8 @@ namespace FonsDijkstra.CConst
                 ? method.AttributeLists.Replace(attributeList, newAttributeList)
                 : method.AttributeLists.Add(newAttributeList);
 
-            return await method.WithNewAttributeLists(newAttributeLists, document, cancellationToken);
+            var newDocument = await method.WithNewAttributeLists(newAttributeLists, document, cancellationToken);
+            return await EnsureUsingDirective(newDocument, cancellationToken);
         }
 
         static async Task<Document> WithNewAttributeLists(this MethodDeclarationSyntax method, SyntaxList<AttributeListSyntax> newAttributeLists, Document document, CancellationToken cancellationToken)
@@ -116,6 +117,22 @@ namespace FonsDijkstra.CConst
             var newMethod = method.WithAttributeLists(newAttributeLists);
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var newRoot = root.ReplaceNode(method, newMethod);
+            return document.WithSyntaxRoot(newRoot);
+        }
+
+        static async Task<Document> EnsureUsingDirective(Document document, CancellationToken cancellationToken)
+        {
+            var usingName = SyntaxFactory.QualifiedName(SyntaxFactory.IdentifierName("FonsDijkstra"), SyntaxFactory.IdentifierName("CConst"));
+            var usingDirective = SyntaxFactory.UsingDirective(usingName);
+
+            var tree = await document.GetSyntaxTreeAsync(cancellationToken);
+            var unit = tree.GetCompilationUnitRoot(cancellationToken);
+            if (unit.Usings.Any(ud => ud.IsEquivalentTo(usingDirective, true)))
+            {
+                return document;
+            }
+            var newUnit = unit.AddUsings(usingDirective);
+            var newRoot = await newUnit.SyntaxTree.GetRootAsync(cancellationToken);
             return document.WithSyntaxRoot(newRoot);
         }
     }
