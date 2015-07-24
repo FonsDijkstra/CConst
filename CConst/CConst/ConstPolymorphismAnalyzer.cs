@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Threading;
-using Microsoft.CodeAnalysis;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace FonsDijkstra.CConst
 {
@@ -15,10 +11,9 @@ namespace FonsDijkstra.CConst
     {
         public const string DiagnosticId = "Const5";
         internal static readonly LocalizableString Title = "Constness polymorphism";
-        internal static readonly LocalizableString MessageFormat = "Interface implementation";
-        internal const string Category = ConstnessHelper.Category;
+        internal static readonly LocalizableString MessageFormat = "Overridden method {0} is declared const";
 
-        internal static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, true);
+        internal static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
 
@@ -40,7 +35,7 @@ namespace FonsDijkstra.CConst
                 var overridenMethod = methodDeclaration.GetOverriddenMethod(context.SemanticModel, out model);
                 if (overridenMethod.HasConstAttribute(model))
                 {
-
+                    context.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclaration.Identifier.GetLocation(), model.GetDeclaredSymbol(overridenMethod).ToDisplayString()));
                 }
             }
         }
