@@ -23,28 +23,22 @@ namespace FonsDijkstra.CConst
 
         public static MethodDeclarationSyntax GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model)
         {
-            if (invocation == null)
-            {
-                return null;
-            }
+            SemanticModel _;
+            return invocation.GetInvokedMethod(model, out _);
+        }
 
+        public static MethodDeclarationSyntax GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model, out SemanticModel invokedMethodModel)
+        {
             var symbol = model.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
             if (symbol == null)
             {
+                invokedMethodModel = null;
                 return null;
             }
 
-            var syntax = symbol.DeclaringSyntaxReferences.SingleOrDefault()?.SyntaxTree;
-            if (syntax == null)
-            {
-                return null;
-            }
-
-            var invokedModel = model.Compilation.GetSemanticModel(syntax);
-            return syntax.GetRoot().DescendantNodesAndSelf()
-                .OfType<MethodDeclarationSyntax>()
-                .Where(md => invokedModel.GetDeclaredSymbol(md) == symbol)
-                .SingleOrDefault();
+            var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault();
+            invokedMethodModel = model.Compilation.GetSemanticModel(syntax?.SyntaxTree);
+            return syntax?.GetSyntax() as MethodDeclarationSyntax;
         }
 
         public static MethodDeclarationSyntax GetOverriddenMethod(this MethodDeclarationSyntax declaration, SemanticModel model, out SemanticModel overriddemMethodModel)
@@ -57,8 +51,8 @@ namespace FonsDijkstra.CConst
             }
 
             var syntax = symbol.OverriddenMethod.DeclaringSyntaxReferences.FirstOrDefault();
-            overriddemMethodModel = model.Compilation.GetSemanticModel(syntax.SyntaxTree);
-            return syntax.GetSyntax() as MethodDeclarationSyntax;
+            overriddemMethodModel = model.Compilation.GetSemanticModel(syntax?.SyntaxTree);
+            return syntax?.GetSyntax() as MethodDeclarationSyntax;
         }
 
         public static AttributeListSyntax GetConstAttributeList(this MethodDeclarationSyntax methodDeclaration, SemanticModel model)

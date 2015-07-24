@@ -32,17 +32,14 @@ namespace FonsDijkstra.CConst
             var containingMethod = invocation.GetContainingMethod();
             if (containingMethod.HasConstAttribute(context.SemanticModel))
             {
-                var invokedMethod = invocation.GetInvokedMethod(context.SemanticModel);
-                if (invokedMethod != null)
+                SemanticModel model;
+                var invokedMethod = invocation.GetInvokedMethod(context.SemanticModel, out model);
+                if (!invokedMethod.HasConstAttribute(model))
                 {
-                    var model = context.SemanticModel.Compilation.GetSemanticModel(invokedMethod.SyntaxTree);
-                    if (!invokedMethod.HasConstAttribute(model))
-                    {
-                        context.ReportDiagnostic(Diagnostic.Create(Rule,
-                            invocation.GetLocation(),
-                            context.SemanticModel.GetDeclaredSymbol(containingMethod)?.Name,
-                            context.SemanticModel.GetSymbolInfo(invocation).Symbol?.Name));
-                    }
+                    context.ReportDiagnostic(Diagnostic.Create(Rule,
+                        invocation.GetLocation(),
+                        context.SemanticModel.GetDeclaredSymbol(containingMethod)?.Name,
+                        context.SemanticModel.GetSymbolInfo(invocation).Symbol?.Name));
                 }
             }
         }
