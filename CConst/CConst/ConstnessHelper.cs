@@ -47,6 +47,20 @@ namespace FonsDijkstra.CConst
                 .SingleOrDefault();
         }
 
+        public static MethodDeclarationSyntax GetOverriddenMethod(this MethodDeclarationSyntax declaration, SemanticModel model, out SemanticModel overriddemMethodModel)
+        {
+            var symbol = model.GetDeclaredSymbol(declaration) as IMethodSymbol;
+            if (symbol.OverriddenMethod == null)
+            {
+                overriddemMethodModel = null;
+                return null;
+            }
+
+            var syntax = symbol.OverriddenMethod.DeclaringSyntaxReferences.FirstOrDefault();
+            overriddemMethodModel = model.Compilation.GetSemanticModel(syntax.SyntaxTree);
+            return syntax.GetSyntax() as MethodDeclarationSyntax;
+        }
+
         public static AttributeListSyntax GetConstAttributeList(this MethodDeclarationSyntax methodDeclaration, SemanticModel model)
         {
             if (methodDeclaration == null)

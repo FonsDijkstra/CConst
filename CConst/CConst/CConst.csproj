@@ -38,6 +38,7 @@
     <Compile Include="ConstActionCodeFixProvider.cs" />
     <Compile Include="ConstAttribute.cs" />
     <Compile Include="ConstnessHelper.cs" />
+    <Compile Include="ConstPolymorphismAnalyzer.cs" />
     <Compile Include="InvocationInConstMethodAnalyzer.cs" />
     <Compile Include="InvocationInConstMethodCodeFixProvider.cs" />
     <Compile Include="NonConstFuncAnalyzer.cs" />
