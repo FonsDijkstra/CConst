@@ -7,38 +7,40 @@ using System.Threading.Tasks;
 
 namespace FonsDijkstra.CConst
 {
+    struct SyntaxModelPair<TSyntax>
+        where TSyntax : SyntaxNode
+    {
+        public SyntaxModelPair(TSyntax syntax, SemanticModel model)
+            : this()
+        {
+            Syntax = syntax;
+            Model = model;
+        }
+
+        public TSyntax Syntax { get; }
+        public SemanticModel Model { get; }
+    }
+
     static class ConstnessHelper
     {
         public const string Category = "Constness";
 
         public static MethodDeclarationSyntax GetContainingMethod(this SyntaxNode node)
         {
-            if (node == null)
-            {
-                return null;
-            }
-
-            return node.AncestorsAndSelf().FirstOrDefault(ancestor => ancestor.Kind() == SyntaxKind.MethodDeclaration) as MethodDeclarationSyntax;
+            return node?.AncestorsAndSelf()?.FirstOrDefault(ancestor => ancestor.Kind() == SyntaxKind.MethodDeclaration) as MethodDeclarationSyntax;
         }
 
-        public static MethodDeclarationSyntax GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model)
-        {
-            SemanticModel _;
-            return invocation.GetInvokedMethod(model, out _);
-        }
-
-        public static MethodDeclarationSyntax GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model, out SemanticModel invokedMethodModel)
+        public static SyntaxModelPair<MethodDeclarationSyntax> GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model)
         {
             var symbol = model.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
             if (symbol == null)
             {
-                invokedMethodModel = null;
-                return null;
+                return new SyntaxModelPair<MethodDeclarationSyntax>();
             }
 
             var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault();
-            invokedMethodModel = model.Compilation.GetSemanticModel(syntax?.SyntaxTree);
-            return syntax?.GetSyntax() as MethodDeclarationSyntax;
+            var method = syntax?.GetSyntax() as MethodDeclarationSyntax;
+            return new SyntaxModelPair<MethodDeclarationSyntax>(method, model.Compilation.GetSemanticModel(syntax?.SyntaxTree));
         }
 
         public static MethodDeclarationSyntax GetOverriddenMethod(this MethodDeclarationSyntax declaration, SemanticModel model, out SemanticModel overriddemMethodModel)

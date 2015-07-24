@@ -28,7 +28,7 @@ namespace FonsDijkstra.CConst
             var model = await context.Document.GetSemanticModelAsync(context.CancellationToken);
 
             var invocation = root.FindNode(context.Span) as InvocationExpressionSyntax;
-            var invokedMethod = invocation.GetInvokedMethod(model);
+            var invokedMethod = invocation.GetInvokedMethod(model).Syntax;
             if (invokedMethod != null)
             {
                 var document = context.Document.Project.Solution.GetDocument(invokedMethod.SyntaxTree);

@@ -32,9 +32,8 @@ namespace FonsDijkstra.CConst
             var containingMethod = invocation.GetContainingMethod();
             if (containingMethod.HasConstAttribute(context.SemanticModel))
             {
-                SemanticModel model;
-                var invokedMethod = invocation.GetInvokedMethod(context.SemanticModel, out model);
-                if (!invokedMethod.HasConstAttribute(model))
+                var invokedMethod = invocation.GetInvokedMethod(context.SemanticModel);
+                if (!invokedMethod.Syntax.HasConstAttribute(invokedMethod.Model))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(Rule,
                         invocation.GetLocation(),
