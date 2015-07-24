@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System;
 
 namespace FonsDijkstra.CConst
 {
@@ -31,12 +32,22 @@ namespace FonsDijkstra.CConst
         {
             if (!methodDeclaration.HasConstAttribute(context.SemanticModel))
             {
-                SemanticModel model;
-                var overridenMethod = methodDeclaration.GetOverriddenMethod(context.SemanticModel, out model);
-                if (overridenMethod.HasConstAttribute(model))
-                {
-                    context.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclaration.Identifier.GetLocation(), model.GetDeclaredSymbol(overridenMethod).ToDisplayString()));
-                }
+                AnalyzeOverrideMethod(context, methodDeclaration);
+                AnalyzeExplicitInterfaceImplementation(context, methodDeclaration);
+            }
+        }
+
+        private void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        {
+            var symbol = context.SemanticModel.GetDeclaredSymbol(methodDeclaration) as IMethodSymbol;
+        }
+
+        private static void AnalyzeOverrideMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        {
+            var overridenMethod = methodDeclaration.GetOverriddenMethod(context.SemanticModel);
+            if (overridenMethod.Syntax.HasConstAttribute(overridenMethod.Model))
+            {
+                context.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclaration.Identifier.GetLocation(), overridenMethod.Model.GetDeclaredSymbol(overridenMethod.Syntax).ToDisplayString()));
             }
         }
     }
