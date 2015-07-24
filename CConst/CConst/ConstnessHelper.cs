@@ -1,6 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,9 +39,7 @@ namespace FonsDijkstra.CConst
                 return new SyntaxModelPair<MethodDeclarationSyntax>();
             }
 
-            var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault();
-            var method = syntax?.GetSyntax() as MethodDeclarationSyntax;
-            return new SyntaxModelPair<MethodDeclarationSyntax>(method, model.Compilation.GetSemanticModel(syntax?.SyntaxTree));
+            return GetMethodDeclaration(symbol, model);
         }
 
         public static SyntaxModelPair<MethodDeclarationSyntax> GetOverriddenMethod(this MethodDeclarationSyntax declaration, SemanticModel model)
@@ -51,7 +50,18 @@ namespace FonsDijkstra.CConst
                 return new SyntaxModelPair<MethodDeclarationSyntax>();
             }
 
-            var syntax = symbol.OverriddenMethod.DeclaringSyntaxReferences.FirstOrDefault();
+            return GetMethodDeclaration(symbol.OverriddenMethod, model);
+        }
+
+        public static IEnumerable<SyntaxModelPair<MethodDeclarationSyntax>> GetExplicitlyImplementedInterfaceMethods(this MethodDeclarationSyntax declaration, SemanticModel model)
+        {
+            var symbol = model.GetDeclaredSymbol(declaration) as IMethodSymbol;
+            return symbol.ExplicitInterfaceImplementations.Select(eii => GetMethodDeclaration(eii, model)).ToArray();
+        }
+
+        private static SyntaxModelPair<MethodDeclarationSyntax> GetMethodDeclaration(IMethodSymbol symbol, SemanticModel model)
+        {
+            var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault();
             var method = syntax?.GetSyntax() as MethodDeclarationSyntax;
             return new SyntaxModelPair<MethodDeclarationSyntax>(method, model.Compilation.GetSemanticModel(syntax?.SyntaxTree));
         }

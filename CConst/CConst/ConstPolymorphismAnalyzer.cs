@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System;
+using System.Linq;
 
 namespace FonsDijkstra.CConst
 {
@@ -39,7 +40,12 @@ namespace FonsDijkstra.CConst
 
         private void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
-            var symbol = context.SemanticModel.GetDeclaredSymbol(methodDeclaration) as IMethodSymbol;
+            var interfaceMethod = methodDeclaration.GetExplicitlyImplementedInterfaceMethods(context.SemanticModel)
+                .FirstOrDefault(eii => eii.Syntax.HasConstAttribute(eii.Model));
+            if (interfaceMethod.Syntax != null)
+            {
+
+            }
         }
 
         private static void AnalyzeOverrideMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
