@@ -29,7 +29,10 @@ namespace FonsDijkstra.CConst
             if (method != null)
             {
                 context.RegisterCodeFix(
-                    CodeAction.Create("Add const declaration", c => method.AddConstAttributeAsync(context.Document, c)),
+                    CodeAction.Create(
+                        "Add const declaration",
+                        c => method.AddConstAttributeAsync(context.Document, c),
+                        NonConstFuncAnalyzer.DiagnosticId + "_add"),
                     context.Diagnostics.Single());
             }
         }

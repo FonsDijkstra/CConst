@@ -29,7 +29,10 @@ namespace FonsDijkstra.CConst
             if (method != null)
             {
                 context.RegisterCodeFix(
-                    CodeAction.Create("Remove const declaration", c => method.RemoveConstAttributeAsync(context.Document, c)),
+                    CodeAction.Create(
+                        "Remove const declaration",
+                        c => method.RemoveConstAttributeAsync(context.Document, c),
+                        ConstActionAnalyzer.DiagnosticId + "_remove"),
                     context.Diagnostics.Single());
             }
         }
