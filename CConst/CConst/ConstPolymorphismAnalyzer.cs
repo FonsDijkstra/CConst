@@ -35,21 +35,27 @@ namespace FonsDijkstra.CConst
             context.RegisterSyntaxNodeAction(AnalyzeMethodDeclaration, SyntaxKind.MethodDeclaration);
         }
 
-        private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
+        void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
         {
             AnalyzeMethodDeclaration(context, context.Node as MethodDeclarationSyntax);
         }
 
-        private void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             if (!methodDeclaration.HasConstAttribute(context.SemanticModel))
             {
                 AnalyzeOverrideMethod(context, methodDeclaration);
                 AnalyzeExplicitInterfaceImplementation(context, methodDeclaration);
+                AnalyzeInterfaceImplementation(context, methodDeclaration);
             }
         }
 
-        private void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        void AnalyzeInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        {
+            throw new NotImplementedException();
+        }
+
+        void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             var interfaceMethods = methodDeclaration.GetExplicitlyImplementedInterfaceMethods(context.SemanticModel)
                 .Where(eii => eii.Syntax.HasConstAttribute(eii.Model));
@@ -59,7 +65,7 @@ namespace FonsDijkstra.CConst
             }
         }
 
-        private static void AnalyzeOverrideMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
+        static void AnalyzeOverrideMethod(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             var overridenMethod = methodDeclaration.GetOverriddenMethod(context.SemanticModel);
             if (overridenMethod.Syntax.HasConstAttribute(overridenMethod.Model))
