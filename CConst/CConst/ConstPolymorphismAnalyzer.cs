@@ -11,13 +11,13 @@ namespace FonsDijkstra.CConst
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class ConstPolymorphismAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "Const5";
-        internal static readonly LocalizableString Title = "Constness polymorphism";
-        internal static readonly LocalizableString MessageFormat = "Overridden method {0} is declared const";
+        public const string OverrideDiagnosticId = "Const51";
+        static readonly LocalizableString OverrideTitle = "Constness override polymorphism";
+        static readonly LocalizableString OverrideMessageFormat = "Overridden method {0} is declared const";
 
-        internal static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
+        static DiagnosticDescriptor OverrideRule = new DiagnosticDescriptor(OverrideDiagnosticId, OverrideTitle, OverrideMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(Rule); } }
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(OverrideRule); } }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -40,9 +40,9 @@ namespace FonsDijkstra.CConst
 
         private void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
-            var interfaceMethod = methodDeclaration.GetExplicitlyImplementedInterfaceMethods(context.SemanticModel)
-                .FirstOrDefault(eii => eii.Syntax.HasConstAttribute(eii.Model));
-            if (interfaceMethod.Syntax != null)
+            var interfaceMethods = methodDeclaration.GetExplicitlyImplementedInterfaceMethods(context.SemanticModel)
+                .Where(eii => eii.Syntax.HasConstAttribute(eii.Model));
+            if (interfaceMethods.Any())
             {
 
             }
@@ -53,7 +53,7 @@ namespace FonsDijkstra.CConst
             var overridenMethod = methodDeclaration.GetOverriddenMethod(context.SemanticModel);
             if (overridenMethod.Syntax.HasConstAttribute(overridenMethod.Model))
             {
-                context.ReportDiagnostic(Diagnostic.Create(Rule, methodDeclaration.Identifier.GetLocation(), overridenMethod.Model.GetDeclaredSymbol(overridenMethod.Syntax).ToDisplayString()));
+                context.ReportDiagnostic(Diagnostic.Create(OverrideRule, methodDeclaration.Identifier.GetLocation(), overridenMethod.Model.GetDeclaredSymbol(overridenMethod.Syntax).ToDisplayString()));
             }
         }
     }

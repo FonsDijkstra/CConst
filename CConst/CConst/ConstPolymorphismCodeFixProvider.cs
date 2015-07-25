@@ -18,7 +18,7 @@ namespace FonsDijkstra.CConst
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ConstPolymorphismCodeFixProvider)), Shared]
     public class ConstPolymorphismCodeFixProvider : CodeFixProvider
     {
-        public const string DiagnosticId = ConstPolymorphismAnalyzer.DiagnosticId;
+        public const string DiagnosticId = ConstPolymorphismAnalyzer.OverrideDiagnosticId;
 
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
