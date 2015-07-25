@@ -12,12 +12,23 @@ namespace FonsDijkstra.CConst
     public class ConstPolymorphismAnalyzer : DiagnosticAnalyzer
     {
         public const string OverrideDiagnosticId = "Const51";
+        public const string ExplicitInterfaceDiagnosticId = "Const52";
+
         static readonly LocalizableString OverrideTitle = "Constness override polymorphism";
         static readonly LocalizableString OverrideMessageFormat = "Overridden method {0} is declared const";
-
         static DiagnosticDescriptor OverrideRule = new DiagnosticDescriptor(OverrideDiagnosticId, OverrideTitle, OverrideMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get { return ImmutableArray.Create(OverrideRule); } }
+        static readonly LocalizableString ExplicitInterfaceTitle = "Constness explicit interface implementation polymorphism";
+        static readonly LocalizableString ExplicitInterfaceMessageFormat = "Explicitely implemented interface method {0} is declared const";
+        static DiagnosticDescriptor ExplicitInterfaceRule = new DiagnosticDescriptor(ExplicitInterfaceDiagnosticId, ExplicitInterfaceTitle, ExplicitInterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
+
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
+        {
+            get
+            {
+                return ImmutableArray.Create(OverrideRule, ExplicitInterfaceRule);
+            }
+        }
 
         public override void Initialize(AnalysisContext context)
         {
@@ -44,7 +55,7 @@ namespace FonsDijkstra.CConst
                 .Where(eii => eii.Syntax.HasConstAttribute(eii.Model));
             if (interfaceMethods.Any())
             {
-
+                context.ReportDiagnostic(Diagnostic.Create(ExplicitInterfaceRule, methodDeclaration.Identifier.GetLocation(), interfaceMethods.First().Model.GetDeclaredSymbol(interfaceMethods.First().Syntax).ToDisplayString()));
             }
         }
 
