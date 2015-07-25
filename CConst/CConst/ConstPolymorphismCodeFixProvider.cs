@@ -18,11 +18,9 @@ namespace FonsDijkstra.CConst
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ConstPolymorphismCodeFixProvider)), Shared]
     public class ConstPolymorphismCodeFixProvider : CodeFixProvider
     {
-        public const string DiagnosticId = ConstPolymorphismAnalyzer.OverrideDiagnosticId;
-
         public sealed override ImmutableArray<string> FixableDiagnosticIds
         {
-            get { return ImmutableArray.Create(DiagnosticId); }
+            get { return ImmutableArray.Create(ConstPolymorphismAnalyzer.OverrideDiagnosticId, ConstPolymorphismAnalyzer.ExplicitInterfaceDiagnosticId); }
         }
 
         public sealed override FixAllProvider GetFixAllProvider()
@@ -40,7 +38,7 @@ namespace FonsDijkstra.CConst
                     CodeAction.Create(
                         "Add const declaration",
                         c => method.AddConstAttributeAsync(context.Document, c),
-                        DiagnosticId + "_add"),
+                        nameof(ConstPolymorphismCodeFixProvider) + "_add"),
                     context.Diagnostics.Single());
             }
         }
