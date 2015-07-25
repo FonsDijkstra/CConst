@@ -59,6 +59,23 @@ namespace FonsDijkstra.CConst
             return symbol.ExplicitInterfaceImplementations.Select(eii => GetMethodDeclaration(eii, model)).ToArray();
         }
 
+        public static IEnumerable<SyntaxModelPair<MethodDeclarationSyntax>> GetImplementedInterfaceMethods(this MethodDeclarationSyntax declaration, SemanticModel model)
+        {
+            var symbol = model.GetDeclaredSymbol(declaration) as IMethodSymbol;
+            var type = symbol.ContainingType;
+            return type
+                .AllInterfaces
+                .SelectMany(@interface => @interface.GetMembers())
+                .Select(interfaceMember => new {
+                    InterfaceMember = interfaceMember,
+                    Implementation = type.FindImplementationForInterfaceMember(interfaceMember)
+                })
+                .Where(interfaceMemberImplementation => interfaceMemberImplementation.Implementation.Equals(symbol))
+                .Select(interfaceMemberImplementation => interfaceMemberImplementation.InterfaceMember as IMethodSymbol)
+                .Select(interfaceMethod => GetMethodDeclaration(interfaceMethod, model))
+                .ToArray();
+        }
+
         private static SyntaxModelPair<MethodDeclarationSyntax> GetMethodDeclaration(IMethodSymbol symbol, SemanticModel model)
         {
             var syntax = symbol.DeclaringSyntaxReferences.FirstOrDefault();

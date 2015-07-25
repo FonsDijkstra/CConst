@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
-using System;
 using System.Linq;
 
 namespace FonsDijkstra.CConst
@@ -13,6 +12,7 @@ namespace FonsDijkstra.CConst
     {
         public const string OverrideDiagnosticId = "Const51";
         public const string ExplicitInterfaceDiagnosticId = "Const52";
+        public const string InterfaceDiagnosticId = "Const53";
 
         static readonly LocalizableString OverrideTitle = "Constness override polymorphism";
         static readonly LocalizableString OverrideMessageFormat = "Overridden method {0} is declared const";
@@ -22,11 +22,15 @@ namespace FonsDijkstra.CConst
         static readonly LocalizableString ExplicitInterfaceMessageFormat = "Explicitely implemented interface method {0} is declared const";
         static DiagnosticDescriptor ExplicitInterfaceRule = new DiagnosticDescriptor(ExplicitInterfaceDiagnosticId, ExplicitInterfaceTitle, ExplicitInterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
+        static readonly LocalizableString InterfaceTitle = "Constness interface implementation polymorphism";
+        static readonly LocalizableString InterfaceMessageFormat = "Implemented interface method {0} is declared const";
+        static DiagnosticDescriptor InterfaceRule = new DiagnosticDescriptor(InterfaceDiagnosticId, InterfaceTitle, InterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
+
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get
             {
-                return ImmutableArray.Create(OverrideRule, ExplicitInterfaceRule);
+                return ImmutableArray.Create(OverrideRule, ExplicitInterfaceRule, InterfaceRule);
             }
         }
 
@@ -52,7 +56,12 @@ namespace FonsDijkstra.CConst
 
         void AnalyzeInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
-            throw new NotImplementedException();
+            var interfaceMethods = methodDeclaration.GetImplementedInterfaceMethods(context.SemanticModel)
+                .Where(interfaceMethod => interfaceMethod.Syntax.HasConstAttribute(interfaceMethod.Model));
+            if (interfaceMethods.Any())
+            {
+                context.ReportDiagnostic(Diagnostic.Create(InterfaceRule, methodDeclaration.Identifier.GetLocation(), interfaceMethods.First().Model.GetDeclaredSymbol(interfaceMethods.First().Syntax).ToDisplayString()));
+            }
         }
 
         void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
