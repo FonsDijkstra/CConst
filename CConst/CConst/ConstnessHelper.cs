@@ -53,12 +53,6 @@ namespace FonsDijkstra.CConst
             return GetMethodDeclaration(symbol.OverriddenMethod, model);
         }
 
-        public static IEnumerable<SyntaxModelPair<MethodDeclarationSyntax>> GetExplicitlyImplementedInterfaceMethods(this MethodDeclarationSyntax declaration, SemanticModel model)
-        {
-            var symbol = model.GetDeclaredSymbol(declaration) as IMethodSymbol;
-            return symbol.ExplicitInterfaceImplementations.Select(eii => GetMethodDeclaration(eii, model)).ToArray();
-        }
-
         public static IEnumerable<SyntaxModelPair<MethodDeclarationSyntax>> GetImplementedInterfaceMethods(this MethodDeclarationSyntax declaration, SemanticModel model)
         {
             var symbol = model.GetDeclaredSymbol(declaration) as IMethodSymbol;

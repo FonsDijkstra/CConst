@@ -16,21 +16,17 @@ namespace FonsDijkstra.CConst
 
         static readonly LocalizableString OverrideTitle = "Constness override polymorphism";
         static readonly LocalizableString OverrideMessageFormat = "Overridden method {0} is declared const";
-        static DiagnosticDescriptor OverrideRule = new DiagnosticDescriptor(OverrideDiagnosticId, OverrideTitle, OverrideMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
-
-        static readonly LocalizableString ExplicitInterfaceTitle = "Constness explicit interface implementation polymorphism";
-        static readonly LocalizableString ExplicitInterfaceMessageFormat = "Explicitely implemented interface method {0} is declared const";
-        static DiagnosticDescriptor ExplicitInterfaceRule = new DiagnosticDescriptor(ExplicitInterfaceDiagnosticId, ExplicitInterfaceTitle, ExplicitInterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
+        static readonly DiagnosticDescriptor OverrideRule = new DiagnosticDescriptor(OverrideDiagnosticId, OverrideTitle, OverrideMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
         static readonly LocalizableString InterfaceTitle = "Constness interface implementation polymorphism";
         static readonly LocalizableString InterfaceMessageFormat = "Implemented interface method {0} is declared const";
-        static DiagnosticDescriptor InterfaceRule = new DiagnosticDescriptor(InterfaceDiagnosticId, InterfaceTitle, InterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
+        static readonly DiagnosticDescriptor InterfaceRule = new DiagnosticDescriptor(InterfaceDiagnosticId, InterfaceTitle, InterfaceMessageFormat, ConstnessHelper.Category, DiagnosticSeverity.Warning, true);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
         {
             get
             {
-                return ImmutableArray.Create(OverrideRule, ExplicitInterfaceRule, InterfaceRule);
+                return ImmutableArray.Create(OverrideRule, InterfaceRule);
             }
         }
 
@@ -49,7 +45,6 @@ namespace FonsDijkstra.CConst
             if (!methodDeclaration.HasConstAttribute(context.SemanticModel))
             {
                 AnalyzeOverrideMethod(context, methodDeclaration);
-                AnalyzeExplicitInterfaceImplementation(context, methodDeclaration);
                 AnalyzeInterfaceImplementation(context, methodDeclaration);
             }
         }
@@ -61,16 +56,6 @@ namespace FonsDijkstra.CConst
             if (interfaceMethods.Any())
             {
                 context.ReportDiagnostic(Diagnostic.Create(InterfaceRule, methodDeclaration.Identifier.GetLocation(), interfaceMethods.First().Model.GetDeclaredSymbol(interfaceMethods.First().Syntax).ToDisplayString()));
-            }
-        }
-
-        void AnalyzeExplicitInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
-        {
-            var interfaceMethods = methodDeclaration.GetExplicitlyImplementedInterfaceMethods(context.SemanticModel)
-                .Where(eii => eii.Syntax.HasConstAttribute(eii.Model));
-            if (interfaceMethods.Any())
-            {
-                context.ReportDiagnostic(Diagnostic.Create(ExplicitInterfaceRule, methodDeclaration.Identifier.GetLocation(), interfaceMethods.First().Model.GetDeclaredSymbol(interfaceMethods.First().Syntax).ToDisplayString()));
             }
         }
 
