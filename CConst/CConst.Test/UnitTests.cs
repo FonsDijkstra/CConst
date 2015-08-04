@@ -41,7 +41,7 @@ namespace FonsDijkstra.CConst.Test
     }";
             var expected = new DiagnosticResult
             {
-                Id = ConstActionAnalyzer.DiagnosticId,
+                Id = NonConstFuncAnalyzer.DiagnosticId,
                 Message = String.Format("Type name '{0}' contains lowercase letters", "TypeName"),
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
@@ -71,12 +71,12 @@ namespace FonsDijkstra.CConst.Test
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new ConstActionCodeFixProvider();
+            return new NonConstFuncCodeFixProvider();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new ConstActionAnalyzer();
+            return new NonConstFuncAnalyzer();
         }
     }
 }

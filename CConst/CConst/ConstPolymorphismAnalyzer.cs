@@ -52,7 +52,8 @@ namespace FonsDijkstra.CConst
         void AnalyzeInterfaceImplementation(SyntaxNodeAnalysisContext context, MethodDeclarationSyntax methodDeclaration)
         {
             var interfaceMethods = methodDeclaration.GetImplementedInterfaceMethods(context.SemanticModel)
-                .Where(interfaceMethod => interfaceMethod.Syntax.HasConstAttribute(interfaceMethod.Model));
+                .Where(interfaceMethod => interfaceMethod.Syntax.HasConstAttribute(interfaceMethod.Model))
+                .ToArray();
             if (interfaceMethods.Any())
             {
                 context.ReportDiagnostic(Diagnostic.Create(InterfaceRule, methodDeclaration.Identifier.GetLocation(), interfaceMethods.First().Model.GetDeclaredSymbol(interfaceMethods.First().Syntax).ToDisplayString()));

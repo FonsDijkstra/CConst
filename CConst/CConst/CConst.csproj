@@ -34,8 +34,6 @@
   <ItemGroup>
     <Compile Include="AssignmentInConstMethodAnalyzer.cs" />
     <Compile Include="AssignmentInConstMethodCodeFixProvider.cs" />
-    <Compile Include="ConstActionAnalyzer.cs" />
-    <Compile Include="ConstActionCodeFixProvider.cs" />
     <Compile Include="ConstAttribute.cs" />
     <Compile Include="ConstnessHelper.cs" />
     <Compile Include="ConstPolymorphismAnalyzer.cs" />
