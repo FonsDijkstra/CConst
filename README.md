@@ -26,8 +26,6 @@ Annotating a method with the Const attribute declares it as a pure function. The
     
     class C
     {
-        int i;
-        
         [Const]
         int F()
         {
@@ -37,7 +35,6 @@ Annotating a method with the Const attribute declares it as a pure function. The
 
         void G()
         {
-            i = 3;
         }
     }
     ```
