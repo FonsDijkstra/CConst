@@ -38,7 +38,7 @@ Annotating a method with the Const attribute declares it as a pure function. The
         }
     }
     ```
-* **CConst51**: An override of a pure function must be a pure function itself.
+* **CConst51**: An override of a pure function must be declared a pure function itself.
     ```C#
     using FonsDijkstra.CConst;
     
@@ -56,7 +56,7 @@ Annotating a method with the Const attribute declares it as a pure function. The
         }
     }
     ```
-* **CConst52**: An interface implementation of a pure function must be a pure function itself.
+* **CConst52**: An interface implementation of a pure function must be declared a pure function itself.
     ```c#
     using FonsDijkstra.CConst;
     
