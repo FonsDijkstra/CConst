@@ -13,7 +13,7 @@ Annotating a method with the Const attribute declares it as a pure function. The
         int i;
         
         [Const]
-        int f()
+        int F()
         {
             i = 3; // reports diagnostic CConst1
             return 0;
@@ -29,13 +29,13 @@ Annotating a method with the Const attribute declares it as a pure function. The
         int i;
         
         [Const]
-        int f()
+        int F()
         {
-            g(); // reports diagnostic CConst2
+            G(); // reports diagnostic CConst2
             return 0;
         }
 
-        void g()
+        void G()
         {
             i = 3;
         }
@@ -48,12 +48,12 @@ Annotating a method with the Const attribute declares it as a pure function. The
     class A
     {
         [Const]
-        public abstract bool f();
+        public abstract bool F();
     }
 
     class B : A
     {
-        public override bool f() // reports diagnostic CConst51
+        public override bool F() // reports diagnostic CConst51
         {
             return false;
         }
@@ -66,12 +66,12 @@ Annotating a method with the Const attribute declares it as a pure function. The
     interface I
     {
         [Const]
-        bool f();
+        bool F();
     }
 
     class C : I
     {
-        public bool f() // reports diagnostic CConst52
+        public bool F() // reports diagnostic CConst52
         {
             return false;
         }
