@@ -18,7 +18,6 @@ namespace FonsDijkstra.CConst
             {
                 return ImmutableArray.Create(
                     ConstPolymorphismAnalyzer.OverrideDiagnosticId,
-                    ConstPolymorphismAnalyzer.ExplicitInterfaceDiagnosticId,
                     ConstPolymorphismAnalyzer.InterfaceDiagnosticId);
             }
         }

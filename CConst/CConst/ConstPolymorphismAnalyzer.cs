@@ -11,8 +11,7 @@ namespace FonsDijkstra.CConst
     public class ConstPolymorphismAnalyzer : DiagnosticAnalyzer
     {
         public const string OverrideDiagnosticId = "Const51";
-        public const string ExplicitInterfaceDiagnosticId = "Const52";
-        public const string InterfaceDiagnosticId = "Const53";
+        public const string InterfaceDiagnosticId = "Const52";
 
         static readonly LocalizableString OverrideTitle = "Constness override polymorphism";
         static readonly LocalizableString OverrideMessageFormat = "Overridden method {0} is declared const";
