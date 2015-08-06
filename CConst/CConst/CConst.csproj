@@ -40,8 +40,6 @@
     <Compile Include="ConstPolymorphismCodeFixProvider.cs" />
     <Compile Include="InvocationInConstMethodAnalyzer.cs" />
     <Compile Include="InvocationInConstMethodCodeFixProvider.cs" />
-    <Compile Include="NonConstFuncAnalyzer.cs" />
-    <Compile Include="NonConstFuncCodeFixProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
