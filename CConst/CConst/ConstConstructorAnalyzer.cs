@@ -66,7 +66,8 @@ namespace FonsDijkstra.CConst
                     return;
                 }
 
-                if (symbol.Kind == SymbolKind.Local) {
+                if (symbol.Kind == SymbolKind.Local || 
+                    (symbol.Kind == SymbolKind.Parameter && ((IParameterSymbol)symbol).RefKind != RefKind.Ref)) {
                     return;
                 }
 
