@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConstConstructorAnalyzer.cs" />
     <Compile Include="AssignmentInConstMethodAnalyzer.cs" />
     <Compile Include="AssignmentInConstMethodCodeFixProvider.cs" />
     <Compile Include="ConstAttribute.cs" />

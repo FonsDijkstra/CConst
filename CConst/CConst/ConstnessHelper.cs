@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
@@ -26,9 +27,24 @@ namespace FonsDijkstra.CConst
     {
         public const string Category = "Constness";
 
+        public static bool ContainedIn(this ISymbol symbol, INamedTypeSymbol type)
+        {
+            return symbol.IsStatic && symbol.ContainingType == type || type.BaseTypes().Contains(symbol.ContainingType);
+        }
+
+        static IEnumerable<INamedTypeSymbol> BaseTypes(this INamedTypeSymbol type)
+        {
+            return type == null ? new INamedTypeSymbol[0] : BaseTypes(type.BaseType).Concat(new[] { type });
+        }
+
         public static MethodDeclarationSyntax GetContainingMethod(this SyntaxNode node)
         {
             return node?.AncestorsAndSelf()?.FirstOrDefault(ancestor => ancestor.Kind() == SyntaxKind.MethodDeclaration) as MethodDeclarationSyntax;
+        }
+
+        public static ConstructorDeclarationSyntax GetContainingConstructor(this SyntaxNode node)
+        {
+            return node?.AncestorsAndSelf()?.FirstOrDefault(ancestor => ancestor.Kind() == SyntaxKind.ConstructorDeclaration) as ConstructorDeclarationSyntax;
         }
 
         public static SyntaxModelPair<MethodDeclarationSyntax> GetInvokedMethod(this InvocationExpressionSyntax invocation, SemanticModel model)
