@@ -29,7 +29,7 @@ namespace FonsDijkstra.CConst
 
         public static bool ContainedIn(this ISymbol symbol, INamedTypeSymbol type)
         {
-            return symbol.IsStatic && symbol.ContainingType == type || type.BaseTypes().Contains(symbol.ContainingType);
+            return symbol.IsStatic ? symbol.ContainingType == type : type.BaseTypes().Contains(symbol.ContainingType);
         }
 
         static IEnumerable<INamedTypeSymbol> BaseTypes(this INamedTypeSymbol type)
