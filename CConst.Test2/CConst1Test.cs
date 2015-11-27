@@ -86,5 +86,62 @@ namespace CConst.Test2
 
             Assert.Empty(DiagnosticHelper.GetDiagnostics(new AssignmentInConstMethodAnalyzer(), source));
         }
+
+        [Fact]
+        public void Pure_method_may_not_assign_field_of_externally_created_object()
+        {
+            var source = @"
+                using FonsDijkstra.CConst;
+
+                class C
+                {
+                    [Const]
+                    D F()
+                    {
+                        var d = Create();
+                        d.I = 10;
+                        return d;
+                    }
+
+                    [Const]
+                    D Create() => new D();
+                }
+
+                class D
+                {
+                    public int I;
+                }
+            ";
+
+            var diagnostics = DiagnosticHelper.GetDiagnostics(new AssignmentInConstMethodAnalyzer(), source);
+            Assert.True(diagnostics.Single().Id == AssignmentInConstMethodAnalyzer.DiagnosticId);
+        }
+
+        [Fact]
+        public void Pure_method_may_assign_field_of_locally_created_object()
+        {
+            var source = @"
+                using FonsDijkstra.CConst;
+
+                class C
+                {
+                    [Const]
+                    D F()
+                    {
+                        var d = new D();
+                        d.I = 10;
+                        return d;
+                    }
+                }
+
+                class D
+                {
+                    public int I;
+                }
+            ";
+
+            var diagnostics = DiagnosticHelper.GetDiagnostics(new AssignmentInConstMethodAnalyzer(), source);
+            Assert.Empty(diagnostics);
+        }
     }
 }

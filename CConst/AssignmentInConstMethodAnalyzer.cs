@@ -1,8 +1,10 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace FonsDijkstra.CConst
 {
@@ -38,15 +40,46 @@ namespace FonsDijkstra.CConst
             AnalyzeAssignment(context, (AssignmentExpressionSyntax)context.Node);
         }
 
+        class Walker : CSharpSyntaxWalker
+        {
+            public readonly HashSet<string> UnsafeLocals = new HashSet<string>();
+
+            readonly SyntaxNodeAnalysisContext context;
+
+            public Walker(SyntaxNodeAnalysisContext context)
+            {
+                this.context = context;
+            }
+
+            public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
+            {
+                var symbol = context.SemanticModel.GetDeclaredSymbol(node);
+                if (symbol?.Kind == SymbolKind.Local) {
+                    if (!(node.Initializer.Value is ObjectCreationExpressionSyntax || node.Identifier.Value is DefaultExpressionSyntax)) {
+                        UnsafeLocals.Add(node.Identifier.Text);
+                    }
+                }
+            }
+        }
+
         void AnalyzeAssignment(SyntaxNodeAnalysisContext context, AssignmentExpressionSyntax assignment)
         {
             var containingMethod = assignment.GetContainingMethod();
-            if (containingMethod.HasConstAttribute(context.SemanticModel))
-            {
-                if (context.SemanticModel.GetSymbolInfo(assignment.Left).Symbol?.Kind != SymbolKind.Local)
-                {
-                    context.ReportDiagnostic(Diagnostic.Create(Rule, assignment.GetLocation(), context.SemanticModel.GetDeclaredSymbol(containingMethod)?.Name));
+            if (containingMethod.HasConstAttribute(context.SemanticModel)) {
+                if (context.SemanticModel.GetSymbolInfo(assignment.Left).Symbol?.Kind == SymbolKind.Local) {
+                    return;
                 }
+
+                var left = assignment.Left as MemberAccessExpressionSyntax;
+                if (left != null) {
+                    var walker = new Walker(context);
+                    containingMethod.Accept(walker);
+                    var exprSymbol = context.SemanticModel.GetSymbolInfo(left.Expression).Symbol;
+                    if (exprSymbol != null && exprSymbol.Kind == SymbolKind.Local && !walker.UnsafeLocals.Contains(exprSymbol.Name)) {
+                        return;
+                    }
+                }
+                context.ReportDiagnostic(Diagnostic.Create(Rule, assignment.GetLocation(), context.SemanticModel.GetDeclaredSymbol(containingMethod)?.Name));
             }
         }
     }
