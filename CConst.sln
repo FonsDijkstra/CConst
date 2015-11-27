@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CConst", "CConst\CConst\CConst.csproj", "{76DBC081-ABFC-4F44-829A-22969C7CF04E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CConst", "CConst\CConst.csproj", "{76DBC081-ABFC-4F44-829A-22969C7CF04E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CConst.Vsix", "CConst\CConst.Vsix\CConst.Vsix.csproj", "{72ED7381-9CF3-4987-8EE4-96D456D9242C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CConst.Vsix", "CConst.Vsix\CConst.Vsix.csproj", "{72ED7381-9CF3-4987-8EE4-96D456D9242C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CConst.Test2", "CConst.Test2\CConst.Test2.csproj", "{E749BDDD-D8A5-40C3-B4BF-692890E09F45}"
 EndProject

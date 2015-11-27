@@ -122,7 +122,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.0.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CConst\CConst\CConst.csproj">
+    <ProjectReference Include="..\CConst\CConst.csproj">
       <Project>{76DBC081-ABFC-4F44-829A-22969C7CF04E}</Project>
       <Name>CConst</Name>
     </ProjectReference>
