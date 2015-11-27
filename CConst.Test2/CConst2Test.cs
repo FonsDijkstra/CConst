@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FonsDijkstra.CConst;
+using Microsoft.CodeAnalysis;
 using Xunit;
 
 namespace CConst.Test2
@@ -7,7 +8,7 @@ namespace CConst.Test2
     public class CConst2Test
     {
         [Fact]
-        public void Pure_method_without_calls_gives_no_disagnostics()
+        public void Pure_method_without_calls_gives_no_diagnostics()
         {
             var source = @"
                 using FonsDijkstra.CConst;
@@ -71,6 +72,28 @@ namespace CConst.Test2
             ";
 
             Assert.True(DiagnosticHelper.GetDiagnostics(new InvocationInConstMethodAnalyzer(), source).Single().Id == InvocationInConstMethodAnalyzer.DiagnosticId);
+        }
+
+        [Fact]
+        public void Impure_method_may_call_impure_method()
+        {
+            var source = @"
+                class C
+                {
+                    int F()
+                    {
+                        G();
+                        return 0;
+                    }
+
+                    void G()
+                    {
+                    }
+                }
+            ";
+
+            var diagnostics = DiagnosticHelper.GetDiagnostics(new InvocationInConstMethodAnalyzer(), source);
+            Assert.Empty(diagnostics);
         }
     }
 }

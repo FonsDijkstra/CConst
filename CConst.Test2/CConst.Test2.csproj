@@ -107,7 +107,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CConst1Test.cs" />
     <Compile Include="CConst2Test.cs" />
+    <Compile Include="CConst51Test.cs" />
+    <Compile Include="CConst52Test.cs" />
     <Compile Include="DiagnosticHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
